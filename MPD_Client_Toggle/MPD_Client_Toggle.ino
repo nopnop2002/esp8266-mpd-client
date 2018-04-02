@@ -121,8 +121,6 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  delay(500);
-
   uint16_t port = 6600;
   char * host = "192.168.10.40"; // ip or dns
   static int number=0;
