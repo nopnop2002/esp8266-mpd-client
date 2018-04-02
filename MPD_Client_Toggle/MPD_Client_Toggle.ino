@@ -161,7 +161,7 @@ void setup() {
   //Serial.println("[" + line + "]");
 
   Serial.println("state=" + String(getStatusItem(line, "state:", citem)) );
-  Serial.println("volume=" + String(getStatusItem(line, "volume:", citem)) );
+  //Serial.println("volume=" + String(getStatusItem(line, "volume:", citem)) );
 
 }
 
