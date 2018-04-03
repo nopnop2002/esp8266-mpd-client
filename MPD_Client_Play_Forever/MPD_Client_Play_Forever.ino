@@ -21,7 +21,6 @@ int mpc_connect(char * host, int port) {
 
   if (!client.connect(host, port)) {
       Serial.println("connection failed");
-      Serial.println("wait 5 sec...");
       return 0;
   }
 
@@ -126,17 +125,13 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  delay(500);
-
   uint16_t port = 6600;
   char * host = "192.168.10.40"; // ip or dns
   static int number=0;
   
   Serial.print("connecting to ");
   Serial.println(host);
-
   if (mpc_connect(host, port) == 0) mpc_error("connect");
-
 
   sprintf(smsg,"status\n");
   client.print(smsg);

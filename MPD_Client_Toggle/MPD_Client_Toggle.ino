@@ -16,7 +16,6 @@ int mpc_connect(char * host, int port) {
 
   if (!client.connect(host, port)) {
       Serial.println("connection failed");
-      Serial.println("wait 5 sec...");
       return 0;
   }
 
@@ -123,7 +122,6 @@ void setup() {
 
   uint16_t port = 6600;
   char * host = "192.168.10.40"; // ip or dns
-  static int number=0;
   
   Serial.print("connecting to ");
   Serial.println(host);
@@ -161,7 +159,7 @@ void setup() {
   //Serial.println("[" + line + "]");
 
   Serial.println("state=" + String(getStatusItem(line, "state:", citem)) );
-  //Serial.println("volume=" + String(getStatusItem(line, "volume:", citem)) );
+  Serial.println("volume=" + String(getStatusItem(line, "volume:", citem)) );
 
 }
 
