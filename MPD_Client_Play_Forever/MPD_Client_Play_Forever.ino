@@ -1,8 +1,12 @@
 /*
- *  MPD Client Example for ESP8266
+ *  MPD Client Example for ESP8266/ESP32
  */
- 
+
+#if defined(ESP8266)
 #include <ESP8266WiFi.h>
+#else        
+#include <WiFi.h>
+#endif
 
 const char* ssid = "Your AP's SSID";
 const char* password = "Your AP's PASSWORD";
