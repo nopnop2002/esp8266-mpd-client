@@ -20,6 +20,6 @@ Play control using IR remote.
 Display current artist & title on LCD.   
 
 # MPD_Client_Remote_1602LCD_Display   
-Play control using IR remote.
+Play control using IR remote.   
 Display current artist & title on LCD.   
 
