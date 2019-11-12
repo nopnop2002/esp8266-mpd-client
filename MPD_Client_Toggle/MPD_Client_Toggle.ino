@@ -8,8 +8,10 @@
 #include <WiFi.h>
 #endif
 
-const char* ssid = "Your AP's SSID";
-const char* password = "Your AP's PASSWORD";
+char* ssid = "Your AP's SSID";
+char* password = "Your AP's PASSWORD";
+uint16_t port = 6600;
+char * host = "192.168.10.45"; // ip or dns
 
 // Use WiFiClient class to create TCP connections
 WiFiClient client;
@@ -67,7 +69,7 @@ void mpc_error(char * buf) {
 }
 
 
-int getStatusItem(String line, char * item, char * value) {
+int getItem(String line, char * item, char * value, int len) {
   int pos1,pos2,pos3;
   Serial.println("item=[" + String(item) + "]");
   pos1=line.indexOf(item);
@@ -81,29 +83,29 @@ int getStatusItem(String line, char * item, char * value) {
   String line3;
   line3 = line2.substring(pos2+1,pos3);
   //Serial.println("line3=[" + line3 + "]");
-  string2char(line3,value);
-  Serial.println("value[" + String(value) + "]");
+  string2char(line3, value, len);
+  Serial.println("value=[" + String(value) + "]");
   return(strlen(value));
 }
 
-void string2char(String line, char * cstr4) {
+void string2char(String line, char * cstr4, int len) {
   char cstr3[40];
   line.toCharArray(cstr3, line.length()+1);
   //Serial.println("cstr3=[" + String(cstr3) + "]");
-  //char cstr4[40];
   int pos4 = 0;
   for (int i=0;i<strlen(cstr3);i++) {
-    if (cstr3[i] == ' ') continue;
+    //if (cstr3[i] == ' ') continue;
+    if (cstr3[i] == ' ' && pos4 == 0) continue;
     cstr4[pos4++] = cstr3[i];
     cstr4[pos4] = 0;
+    if (pos4 == (len-1)) break;
   }
   //Serial.println("cstr4=[" + String(cstr4) + "]");
-  
 }
 
  
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // We start by connecting to a WiFi network
   Serial.println();
@@ -124,9 +126,6 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  uint16_t port = 6600;
-  char * host = "192.168.10.40"; // ip or dns
-  
   Serial.print("connecting to ");
   Serial.println(host);
 
@@ -145,7 +144,7 @@ void setup() {
   line = client.readStringUntil('\0');
   //Serial.println("[" + line + "]");
 
-  Serial.println("state=" + String(getStatusItem(line, "state:", citem)) );
+  Serial.println("state=" + String(getItem(line, "state:", citem, sizeof(citem))) );
 
   if (strcmp(citem,"stop") == 0) {
     if (mpc_command("play") == 0) mpc_error("play");
@@ -162,8 +161,8 @@ void setup() {
   line = client.readStringUntil('\0');
   //Serial.println("[" + line + "]");
 
-  Serial.println("state=" + String(getStatusItem(line, "state:", citem)) );
-  Serial.println("volume=" + String(getStatusItem(line, "volume:", citem)) );
+  Serial.println("state=" + String(getItem(line, "state:", citem, sizeof(citem))) );
+  Serial.println("volume=" + String(getItem(line, "volume:", citem, sizeof(citem))) );
 
 }
 
