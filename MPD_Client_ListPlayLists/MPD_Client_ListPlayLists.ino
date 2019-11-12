@@ -8,8 +8,10 @@
 #include <WiFi.h>
 #endif
 
-const char* ssid = "Your AP's SSID";
-const char* password = "Your AP's PASSWORD";
+char* ssid = "Your AP's SSID";
+char* password = "Your AP's PASSWORD";
+uint16_t port = 6600;
+char * host = "192.168.10.45"; // ip or dns
 
 // Use WiFiClient class to create TCP connections
 WiFiClient client;
@@ -65,45 +67,9 @@ void mpc_error(char * buf) {
   Serial.println(buf);
   while(1) {}
 }
-
-
-int getStatusItem(String line, char * item, char * value) {
-  int pos1,pos2,pos3;
-  Serial.println("item=[" + String(item) + "]");
-  pos1=line.indexOf(item);
-  //Serial.println("pos1=" + String(pos1));
-  String line2;
-  line2 = line.substring(pos1);
-  pos2=line2.indexOf(":");
-  pos3=line2.indexOf(0x0a);
-  //Serial.println("pos2=" + String(pos2));
-  //Serial.println("pos3=" + String(pos3));
-  String line3;
-  line3 = line2.substring(pos2+1,pos3);
-  //Serial.println("line3=[" + line3 + "]");
-  string2char(line3,value);
-  Serial.println("value[" + String(value) + "]");
-  return(strlen(value));
-}
-
-void string2char(String line, char * cstr4) {
-  char cstr3[40];
-  line.toCharArray(cstr3, line.length()+1);
-  //Serial.println("cstr3=[" + String(cstr3) + "]");
-  //char cstr4[40];
-  int pos4 = 0;
-  for (int i=0;i<strlen(cstr3);i++) {
-    if (cstr3[i] == ' ') continue;
-    cstr4[pos4++] = cstr3[i];
-    cstr4[pos4] = 0;
-  }
-  //Serial.println("cstr4=[" + String(cstr4) + "]");
-  
-}
-
  
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // We start by connecting to a WiFi network
   Serial.println();
@@ -124,8 +90,6 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  uint16_t port = 6600;
-  char * host = "192.168.10.40"; // ip or dns
 
   Serial.print("connecting to ");
   Serial.println(host);
