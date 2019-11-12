@@ -18,5 +18,9 @@ char * host = "192.168.10.45"; // ip or dns
 #define VOLD 0x00FF42BD
 ```
 
+# Circuit diagram
+
+![WeMos-IRrecv](https://user-images.githubusercontent.com/6020549/68648965-f72cd380-0564-11ea-9635-a76d9f798cbc.jpg)
+
 # Required library
 https://github.com/crankyoldgit/IRremoteESP8266
