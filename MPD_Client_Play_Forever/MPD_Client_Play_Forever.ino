@@ -8,16 +8,15 @@
 #include <WiFi.h>
 #endif
 
-const char* ssid = "Your AP's SSID";
-const char* password = "Your AP's PASSWORD";
+char* ssid = "Your AP's SSID";
+char* password = "Your AP's PASSWORD";
+uint16_t port = 6600;
+char * host = "192.168.10.45"; // ip or dns
 
 // Use WiFiClient class to create TCP connections
 WiFiClient client;
 
 long lastMillis = 0;
-String line;
-char citem[40];
-char smsg[40];
 
 int mpc_connect(char * host, int port) {
   char smsg[40];
@@ -72,7 +71,7 @@ void mpc_error(char * buf) {
 }
 
 
-int getStatusItem(String line, char * item, char * value) {
+int getItem(String line, char * item, char * value, int len) {
   int pos1,pos2,pos3;
   Serial.println("item=[" + String(item) + "]");
   pos1=line.indexOf(item);
@@ -86,29 +85,29 @@ int getStatusItem(String line, char * item, char * value) {
   String line3;
   line3 = line2.substring(pos2+1,pos3);
   //Serial.println("line3=[" + line3 + "]");
-  string2char(line3,value);
-  Serial.println("value[" + String(value) + "]");
+  string2char(line3, value, len);
+  Serial.println("value=[" + String(value) + "]");
   return(strlen(value));
 }
 
-void string2char(String line, char * cstr4) {
+void string2char(String line, char * cstr4, int len) {
   char cstr3[40];
   line.toCharArray(cstr3, line.length()+1);
   //Serial.println("cstr3=[" + String(cstr3) + "]");
-  //char cstr4[40];
   int pos4 = 0;
   for (int i=0;i<strlen(cstr3);i++) {
-    if (cstr3[i] == ' ') continue;
+    //if (cstr3[i] == ' ') continue;
+    if (cstr3[i] == ' ' && pos4 == 0) continue;
     cstr4[pos4++] = cstr3[i];
     cstr4[pos4] = 0;
+    if (pos4 == (len-1)) break;
   }
   //Serial.println("cstr4=[" + String(cstr4) + "]");
-  
 }
 
  
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // We start by connecting to a WiFi network
   Serial.println();
@@ -129,13 +128,17 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  uint16_t port = 6600;
-  char * host = "192.168.10.40"; // ip or dns
-  static int number=0;
-  
-  Serial.print("connecting to ");
-  Serial.println(host);
-  if (mpc_connect(host, port) == 0) mpc_error("connect");
+  while(1) {
+    Serial.print("connecting to ");
+    Serial.println(host);
+  //if (mpc_connect(host, port) == 0) mpc_error("connect");
+    if (mpc_connect(host, port) == 1) break;
+    delay(10*1000);
+  }
+
+  String line;
+  char citem[40];
+  char smsg[40];
 
   sprintf(smsg,"status\n");
   client.print(smsg);
@@ -145,7 +148,7 @@ void setup() {
   client.setTimeout(1000);
   line = client.readStringUntil('\0');
   //Serial.println("[" + line + "]");
-  Serial.println("state=" + String(getStatusItem(line, "state:", citem)) );
+  Serial.println("state=" + String(getItem(line, "state:", citem, sizeof(citem))) );
 
   if (strcmp(citem,"stop") == 0) {
     if (mpc_command("play") == 0) mpc_error("play");
@@ -155,52 +158,56 @@ void setup() {
 
 
 void loop() {
-  static int counter=0;
-  //client.loop();
+  String line;
+  char citem[40];
+  char smsg[40];
+
+  if (!client.connected()) {
+    Serial.println("server disconencted");
+    delay(10*1000);
+    ESP.restart();
+  }
 
   long now = millis();
+  if (now < lastMillis) lastMillis = now; // millis is overflow
   if (now - lastMillis > 1000) {
     lastMillis = now;
-    counter++;
-    if (counter > 10) {
-      sprintf(smsg,"status\n");
+    sprintf(smsg,"status\n");
+    client.print(smsg);
+    Serial.println("status");
+  
+    //read back one line from server
+    client.setTimeout(1000);
+    line = client.readStringUntil('\0');
+    //Serial.println("status=[" + line + "]");
+    Serial.println("state=" + String(getItem(line, "state:", citem, sizeof(citem))) );
+
+    if (strcmp(citem,"play") == 0) {
+      sprintf(smsg,"currentsong\n");
       client.print(smsg);
-      Serial.println("status");
-    
       //read back one line from server
       client.setTimeout(1000);
       line = client.readStringUntil('\0');
-      //Serial.println("status=[" + line + "]");
-      Serial.println("state=" + String(getStatusItem(line, "state:", citem)) );
+      Serial.println("currentsong=[" + line + "]");
 
-      if (strcmp(citem,"play") == 0) {
-        sprintf(smsg,"currentsong\n");
-        client.print(smsg);
-        //read back one line from server
-        client.setTimeout(1000);
-        line = client.readStringUntil('\0');
-        Serial.println("currentsong=[" + line + "]");
-
-        sprintf(smsg,"playlist\n");
-        client.print(smsg);
-        //read back one line from server
-        client.setTimeout(1000);
-        line = client.readStringUntil('\0');
-        Serial.println("playlist=[" + line + "]");
+      sprintf(smsg,"playlist\n");
+      client.print(smsg);
+      //read back one line from server
+      client.setTimeout(1000);
+      line = client.readStringUntil('\0');
+      Serial.println("playlist=[" + line + "]");
 
 #if 0
-        //This command is supported since MPD Version 0.20
-        sprintf(smsg,"duration\n");
-        client.print(smsg);
-        //read back one line from server
-        client.setTimeout(1000);
-        line = client.readStringUntil('\0');
-        Serial.println("duration=[" + line + "]");
+      //This command is supported since MPD Version 0.20
+      sprintf(smsg,"duration\n");
+      client.print(smsg);
+      //read back one line from server
+      client.setTimeout(1000);
+      line = client.readStringUntil('\0');
+      Serial.println("duration=[" + line + "]");
 #endif       
-      }  else {
-        if (mpc_command("play") == 0) mpc_error("play");
-      }
-      counter=0;
+    }  else {
+      if (mpc_command("play") == 0) mpc_error("play");
     }
   }
 }
