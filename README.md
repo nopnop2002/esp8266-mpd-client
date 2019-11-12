@@ -13,3 +13,9 @@ Show current playlists.
 # MPD_Client_Play_Forever   
 Play current song/playlist forever.   
 
+# MPD_Client_Remote   
+Play control using IR remote.   
+
+# MPD_Client_1602LCD_Display   
+Display current artist & title on LCD.   
+
