@@ -15,5 +15,10 @@ int numberOfHorizontalDisplays = 4;
 int numberOfVerticalDisplays = 1;
 ```
 
+# Wire cable length
+
+Wire cable length should be as short as possible.   
+
+
 ![LedMatrix-1](https://user-images.githubusercontent.com/6020549/68864658-d87d3700-0734-11ea-9c62-08c02b5a8e18.JPG)
 
