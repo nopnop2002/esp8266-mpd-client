@@ -27,7 +27,7 @@ char * host = "192.168.10.45"; // ip or dns
 
 # Circuit diagram
 
-![WeMos-1602LCD-GPIO-BackLight-Remote](https://user-images.githubusercontent.com/6020549/68650770-2b09f800-0569-11ea-80e1-8f9ddd25f00e.jpg)
+![WeMos-1602LCD-GPIO-BackLight-Remote](https://user-images.githubusercontent.com/6020549/68948369-1349a280-07fb-11ea-952d-1b2a1f5c13df.jpg)
 
 # Required library
 https://github.com/crankyoldgit/IRremoteESP8266
