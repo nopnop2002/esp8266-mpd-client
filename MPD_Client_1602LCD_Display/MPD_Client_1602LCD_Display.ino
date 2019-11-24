@@ -29,7 +29,6 @@
 #include <WiFi.h>
 #endif
 
-#include "SPI.h"
 #include <LiquidCrystal.h>
 /* LiquidCrystal lcd(rs, enable, d4, d5, d6, d7) */
 LiquidCrystal lcd(5, 4, 16, 14, 12, 13);
