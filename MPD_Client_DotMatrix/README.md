@@ -15,6 +15,16 @@ int numberOfHorizontalDisplays = 4;
 int numberOfVerticalDisplays = 1;
 ```
 
+# Wirering
+
+|DotMatrix||ESP8266|
+|:-:|:-:|:-:|
+|VCC|--|3.3V|
+|GND|--|GND|
+|DIN|--|IO13(D7)|
+|CS|--|IO15(D8)|
+|CLK|--|IO14(D5)|
+
 # Wire cable length
 
 Wire cable length should be as short as possible.   
