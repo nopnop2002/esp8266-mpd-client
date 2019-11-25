@@ -21,7 +21,8 @@ WiFiClient client;
 long lastMillis = 0;
 
 // playlists
-char playlist[10][128];
+#define MAX_PLAYLIST 10
+char playlist[MAX_PLAYLIST][128];
 int nplaylist = 0;
 
 
@@ -134,7 +135,7 @@ void string2char(String line, char * cstr4, int len) {
   //Serial.println("cstr4=[" + String(cstr4) + "]");
 }
 
-void savePlaylist() {
+void savePlaylist(int limit) {
   String line;
   char citem[128];
   char smsg[40];
@@ -155,7 +156,7 @@ void savePlaylist() {
     //Serial.print("playlist=");
     //Serial.println(citem);
     strcpy(playlist[nplaylist++], citem);
-    if (nplaylist == 10) break;
+    if (nplaylist == limit) break;
   }
 }
  
@@ -190,7 +191,7 @@ void setup() {
   }
 
   // save playlist
-  savePlaylist();
+  savePlaylist(MAX_PLAYLIST);
   for(int i=0;i<nplaylist;i++) {
     Serial.print("playlist[" + String(i) + "]=");
     Serial.println(playlist[i]);    
@@ -206,10 +207,8 @@ void setup() {
 
 void loop() {
   static int counter = 0;
-  //String line;
-  //char state[40];
   char smsg[40];
-  static int currentIndex = nplaylist;
+  static int playlistIndex = nplaylist;
   
   if (!client.connected()) {
     Serial.println("server disconencted");
@@ -224,10 +223,10 @@ void loop() {
     lastMillis = now;
     counter++;
     if (counter > 10) {
-      currentIndex++;
-      if (currentIndex >= nplaylist) currentIndex = 0;
+      playlistIndex++;
+      if (playlistIndex >= nplaylist) playlistIndex = 0;
       strcpy(smsg, "load \"");
-      strcat(smsg, playlist[currentIndex]);
+      strcat(smsg, playlist[playlistIndex]);
       strcat(smsg, "\"");
       Serial.println();
       Serial.print("smsg=");
