@@ -11,13 +11,13 @@ Judge current status and execute PLYA or STOP.
 Play current song forever.   
 
 # MPD_Client_Remote   
-Play control using IR remote.   
+Control using IR remote.   
 
 # MPD_Client_1602LCD_Display   
 Display current artist & title on LCD.   
 
 # MPD_Client_Remote_1602LCD_Display   
-Play control using IR remote.   
+Control using IR remote.   
 Display current artist & title on LCD.   
 
 # MPD_Client_DotMatrix   
