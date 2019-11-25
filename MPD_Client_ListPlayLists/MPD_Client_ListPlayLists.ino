@@ -67,6 +67,43 @@ void mpc_error(char * buf) {
   Serial.println(buf);
   while(1) {}
 }
+
+int getItems(String line, int start, char * item, char * value, int len) {
+  int pos1,pos2,pos3;
+  Serial.println("item=[" + String(item) + "]");
+  pos1=line.indexOf(item, start);
+  //Serial.println("pos1=" + String(pos1));
+  if (pos1 < 0) return(pos1);
+  
+  String line2;
+  line2 = line.substring(pos1);
+  pos2=line2.indexOf(":");
+  pos3=line2.indexOf(0x0a);
+  //Serial.println("pos2=" + String(pos2));
+  //Serial.println("pos3=" + String(pos3));
+  String line3;
+  line3 = line2.substring(pos2+1,pos3);
+  //Serial.println("line3=[" + line3 + "]");
+  string2char(line3, value, len);
+  Serial.println("value=[" + String(value) + "]");
+  //return(strlen(value));
+  return(pos1+pos3+1);
+}
+
+void string2char(String line, char * cstr4, int len) {
+  char cstr3[256];
+  line.toCharArray(cstr3, line.length()+1);
+  //Serial.println("cstr3=[" + String(cstr3) + "]");
+  int pos4 = 0;
+  for (int i=0;i<strlen(cstr3);i++) {
+    //if (cstr3[i] == ' ') continue;
+    if (cstr3[i] == ' ' && pos4 == 0) continue;
+    cstr4[pos4++] = cstr3[i];
+    cstr4[pos4] = 0;
+    if (pos4 == (len-1)) break;
+  }
+  //Serial.println("cstr4=[" + String(cstr4) + "]");
+}
  
 void setup() {
   Serial.begin(115200);
@@ -104,7 +141,17 @@ void setup() {
   //read back one line from server
   client.setTimeout(1000);
   line = client.readStringUntil('\0');
-  Serial.println("[" + line + "]");
+  Serial.println("line=[" + line + "]");
+
+  //show playlist
+  int offset = 0;
+  char playlist[128];
+  while(1) {
+    offset = getItems(line, offset, "playlist:", playlist, sizeof(playlist));
+    if (offset < 0) break;
+    //Serial.print("playlist=");
+    //Serial.println(playlist);
+  }
 }
 
 
