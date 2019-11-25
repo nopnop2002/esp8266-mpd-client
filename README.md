@@ -26,3 +26,7 @@ Display current artist & title on 8x8 DotMatrix LED.
 Play control using IR remote.   
 Display current artist & title on LCD.   
 
+# MPD_Client_Load_Playlist   
+Load playlist forever.   
+
+
