@@ -7,7 +7,7 @@ MPD protocol is [here](https://github.com/MusicPlayerDaemon/MPD/blob/master/doc/
 # MPD_Client_Toggle   
 Judge current status and execute PLYA or STOP.   
 
-# MPD_Client_ListPlayLists   
+# MPD_Client_List_PlayLists   
 Show current playlists.   
 
 # MPD_Client_Play_Forever   
