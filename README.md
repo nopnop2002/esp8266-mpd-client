@@ -1,4 +1,4 @@
-# esp8266_mpd_client
+# esp8266-mpd-client
 MPD(MusicPlayerDaemon) client example for ESP8266/ESP32.    
 MPD protocol is [here](https://github.com/MusicPlayerDaemon/MPD/blob/master/doc/protocol.rst).   
 
