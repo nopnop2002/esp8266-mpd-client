@@ -29,4 +29,6 @@ Show current playlists.
 # MPD_Client_Load_Playlist   
 Load playlist forever.   
 
-
+# MPD_Client_Keep_Connect   
+If there is no communication for a certain period of time, the connection with the MPD server will be disconnected.   
+Keep to connect to the MPD server using the STATUS command.   
